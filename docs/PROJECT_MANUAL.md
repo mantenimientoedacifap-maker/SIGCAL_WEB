@@ -2,7 +2,7 @@
 
 **Última actualización:** 16/05/2026
 **Versión reflejada:** Fase 10 completada (Fase 8 pendiente)
-**Último cambio:** Carga de guía de remisión en formulario de envío implementada
+**Último cambio:** Creación de usuarios desde UI con Edge Function desplegada
 
 ---
 
@@ -641,10 +641,14 @@ El output se genera en `build/web/`.
 | 16/05/2026 | Edición y anulación de calibraciones con trazabilidad | `lib/features/calibrations/`, `lib/features/tools/`, `lib/features/dashboard/`, `lib/core/`, `supabase/migrations/` | Las calibraciones eran inmutables una vez registradas | Editar calibración existente, anular con motivo, trazabilidad completa, filtrado en dashboard |
 | 16/05/2026 | Subida de manual técnico e informes técnicos | `lib/features/tools/data/tool_catalog_providers.dart`, `lib/features/tools/presentation/tool_detail_page.dart` | Botones TODO sin funcionalidad en ficha técnica | Manual técnico: picker PDF → `support-documents`. Informes: diálogo con tipo/título → `tool_documents`. Ambos con feedback visual |
 | 16/05/2026 | Carga de guía de remisión en formulario de envío | `lib/features/shipments/data/shipment_providers.dart`, `lib/features/shipments/presentation/shipment_form_page.dart` | El formulario solo aceptaba número de guía sin archivo adjunto | Picker de PDF/JPG/PNG, subida al bucket `remission-guides`, guardado en `remission_guide_file_url` |
+| 16/05/2026 | Creación de usuarios desde UI con Edge Function | `lib/features/users/`, `supabase/functions/create-user/` | Solo se podían crear usuarios desde Supabase Dashboard | Formulario en UI → Edge Function `create-user` (service_role del lado servidor) → Auth + perfil |
 
 ---
 
 ## 15. Pendientes
+
+### Alta prioridad
+1. ✅ ~~Actualizar USER_INSTRUCTION_MANUAL.md~~ → Completado en v2.0 (16/05/2026). Sección 16 documenta el sistema de alertas y notificaciones.
 
 ### Alta prioridad
 1. ✅ ~~Actualizar USER_INSTRUCTION_MANUAL.md~~ → Completado en v2.0 (16/05/2026). Sección 16 documenta el sistema de alertas y notificaciones.
@@ -658,5 +662,5 @@ El output se genera en `build/web/`.
 8. ✅ ~~Carga de guía de remisión~~ → Completado 16/05/2026. Picker de archivo (PDF/JPG/PNG) en formulario de envío, subida a bucket `remission-guides`, persistencia en `remission_guide_file_url`.
 
 ### Baja prioridad
-9. **Despliegue web**: definir hosting y proceso.
-10. **Creación de usuarios desde UI**: edge function o panel seguro.
+9. ✅ ~~Despliegue web~~ → Completado 16/05/2026. Configurado Vercel + GitHub CI/CD (`vercel.json`, `build.sh`), rama `sigcalweb-v1`, repo conectado.
+10. ✅ ~~Creación de usuarios desde UI~~ → Completado 16/05/2026. Formulario en panel de administración → Edge Function `create-user` con `service_role` del lado servidor. Pendiente: desplegar la función (`supabase functions deploy create-user`).

@@ -10,11 +10,16 @@ import '../../auth/domain/user_profile.dart';
 import '../../auth/domain/user_role.dart';
 import '../data/user_management_providers.dart';
 
-class UsersAdminPage extends ConsumerWidget {
+class UsersAdminPage extends ConsumerStatefulWidget {
   const UsersAdminPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<UsersAdminPage> createState() => _UsersAdminPageState();
+}
+
+class _UsersAdminPageState extends ConsumerState<UsersAdminPage> {
+  @override
+  Widget build(BuildContext context) {
     final usersState = ref.watch(managedUsersProvider);
 
     return Column(
@@ -26,7 +31,7 @@ class UsersAdminPage extends ConsumerWidget {
               'Control de perfiles, roles operativos y estado de acceso para SIGCAL.',
           actions: [
             FilledButton.icon(
-              onPressed: () => _showCreateGuidance(context),
+              onPressed: _showCreateDialog,
               icon: const Icon(Icons.person_add_alt_1_outlined),
               label: const Text('Agregar usuario'),
             ),
@@ -50,28 +55,130 @@ class UsersAdminPage extends ConsumerWidget {
     );
   }
 
-  void _showCreateGuidance(BuildContext context) {
-    showDialog<void>(
+  Future<void> _showCreateDialog() async {
+    final emailCtl = TextEditingController();
+    final passwordCtl = TextEditingController();
+    final nameCtl = TextEditingController();
+    String role = 'usuario';
+
+    final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Agregar usuario'),
-          content: const Text(
-            'Por seguridad, la creacion de cuentas Auth no se hace desde el '
-            'frontend con llaves administrativas. En esta fase se crea el '
-            'usuario en Supabase Auth y luego se gestiona su rol aqui. '
-            'En una fase posterior agregaremos una funcion backend segura '
-            'para automatizar este paso.',
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setDialogState) => AlertDialog(
+          title: const Text('Crear usuario'),
+          content: SizedBox(
+            width: 460,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: emailCtl,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: const InputDecoration(
+                    labelText: 'Correo electronico',
+                    prefixIcon: Icon(Icons.email_outlined),
+                  ),
+                ),
+                const SizedBox(height: 14),
+                TextField(
+                  controller: passwordCtl,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    labelText: 'Contraseña',
+                    prefixIcon: Icon(Icons.lock_outlined),
+                    helperText: 'Minimo 6 caracteres',
+                  ),
+                ),
+                const SizedBox(height: 14),
+                TextField(
+                  controller: nameCtl,
+                  decoration: const InputDecoration(
+                    labelText: 'Nombre completo',
+                    prefixIcon: Icon(Icons.badge_outlined),
+                  ),
+                ),
+                const SizedBox(height: 14),
+                DropdownButtonFormField<String>(
+                  initialValue: role,
+                  decoration: const InputDecoration(
+                    labelText: 'Rol',
+                    prefixIcon: Icon(Icons.admin_panel_settings_outlined),
+                  ),
+                  items: const [
+                    DropdownMenuItem(
+                      value: 'usuario',
+                      child: Text('Usuario (solo consulta)'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'administrador',
+                      child: Text('Administrador (gestion operativa)'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'lider',
+                      child: Text('Lider (acceso total)'),
+                    ),
+                  ],
+                  onChanged: (v) => setDialogState(() => role = v ?? 'usuario'),
+                ),
+              ],
+            ),
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Entendido'),
+              onPressed: () => Navigator.pop(ctx, false),
+              child: const Text('Cancelar'),
+            ),
+            FilledButton.icon(
+              onPressed: () => Navigator.pop(ctx, true),
+              icon: const Icon(Icons.person_add_outlined),
+              label: const Text('Crear usuario'),
             ),
           ],
-        );
-      },
+        ),
+      ),
     );
+
+    emailCtl.dispose();
+    passwordCtl.dispose();
+    nameCtl.dispose();
+
+    if (confirmed != true || !mounted) return;
+
+    final email = emailCtl.text.trim();
+    final password = passwordCtl.text;
+    final name = nameCtl.text.trim();
+
+    if (email.isEmpty || password.length < 6) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Correo y contraseña (min 6 caracteres) son obligatorios.'),
+          ),
+        );
+      }
+      return;
+    }
+
+    try {
+      await ref.read(userManagementRepositoryProvider).createUser(
+            email: email,
+            password: password,
+            fullName: name,
+            role: role,
+          );
+      ref.invalidate(managedUsersProvider);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Usuario creado correctamente.')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
+    }
   }
 }
 

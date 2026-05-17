@@ -64,6 +64,34 @@ class UserManagementRepository {
     await client.from('profiles').update({'active': false}).eq('id', profileId);
   }
 
+  /// Crea un usuario nuevo llamando a la Edge Function `create-user`.
+  /// La función usa `service_role_key` del lado del servidor, sin exponerla
+  /// al frontend.
+  Future<void> createUser({
+    required String email,
+    required String password,
+    required String fullName,
+    required String role,
+  }) async {
+    final client = _requireClient();
+
+    final response = await client.functions.invoke('create-user', body: {
+      'email': email,
+      'password': password,
+      'fullName': fullName,
+      'role': role,
+    });
+
+    if (response.data == null) {
+      throw Exception('Sin respuesta del servidor');
+    }
+
+    final data = response.data as Map<String, dynamic>;
+    if (data['success'] != true) {
+      throw Exception(data['error'] ?? 'Error desconocido al crear usuario');
+    }
+  }
+
   SupabaseClient _requireClient() {
     final client = _client;
 
