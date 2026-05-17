@@ -52,7 +52,7 @@ Deno.serve(async (req: Request) => {
     const { data: profile, error: profileErr } = await supabaseClient
       .from("profiles")
       .select("role")
-      .eq("id", caller.id)
+      .eq("auth_user_id", caller.id)
       .single();
 
     if (profileErr || profile?.role !== "lider") {
