@@ -46,9 +46,16 @@ echo "🔧 Compilando SIGCAL para web..."
 echo "   SUPABASE_URL: $SUPABASE_URL"
 echo ""
 
-flutter build web \
-  --dart-define=SUPABASE_URL="$SUPABASE_URL" \
-  --dart-define=SUPABASE_ANON_KEY="$SUPABASE_ANON_KEY"
+# Escribir defines en archivo JSON para evitar problemas de escaping
+# con caracteres especiales en los tokens JWT (puntos, iguales)
+cat > /tmp/sigcal-defines.json << EOF
+{
+  "SUPABASE_URL": "$SUPABASE_URL",
+  "SUPABASE_ANON_KEY": "$SUPABASE_ANON_KEY"
+}
+EOF
+
+flutter build web --dart-define-from-file=/tmp/sigcal-defines.json
 
 echo ""
 echo "✅ Build completado: build/web/"
