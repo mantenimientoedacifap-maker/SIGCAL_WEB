@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -82,11 +84,14 @@ class UserManagementRepository {
       'role': role,
     });
 
-    if (response.data == null) {
+    // response.data puede ser String (JSON crudo) o Map ya decodificado
+    final dynamic raw = response.data;
+    if (raw == null) {
       throw Exception('Sin respuesta del servidor');
     }
 
-    final data = response.data as Map<String, dynamic>;
+    final Map<String, dynamic> data =
+        raw is String ? jsonDecode(raw) as Map<String, dynamic> : raw as Map<String, dynamic>;
     if (data['success'] != true) {
       throw Exception(data['error'] ?? 'Error desconocido al crear usuario');
     }
