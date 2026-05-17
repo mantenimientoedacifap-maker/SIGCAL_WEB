@@ -1,21 +1,17 @@
 #!/bin/bash
 # ═══════════════════════════════════════════════════════════════════════════════
-# SIGCAL – Build de producción para Flutter web
-#
-# En Vercel, las variables SUPABASE_URL y SUPABASE_ANON_KEY se inyectan
-# automáticamente desde el dashboard (Settings → Environment Variables).
-# En local, se leen desde el archivo .env (gitignored, nunca se sube).
-#
-# Si Flutter no está instalado (entorno Vercel), se descarga automáticamente.
+# SIGCAL – Build de producción para Flutter web (v3 – dart-define-from-file)
 # ═══════════════════════════════════════════════════════════════════════════════
 
 set -euo pipefail
+
+echo "📦 SIGCAL build.sh v3 (dart-define-from-file)"
 
 # ── 1. Asegurar que Flutter esté disponible ─────────────────────────────────
 if ! command -v flutter &>/dev/null; then
   FLUTTER_DIR="/tmp/flutter-sdk"
   if [ ! -d "$FLUTTER_DIR" ]; then
-    echo "📦 Descargando Flutter SDK (esto puede tomar ~2 min en Vercel)..."
+    echo "📦 Descargando Flutter SDK (~2 min)..."
     git clone --depth 1 --branch stable \
       https://github.com/flutter/flutter.git "$FLUTTER_DIR" 2>&1 | tail -1
   fi
@@ -25,35 +21,27 @@ if ! command -v flutter &>/dev/null; then
   echo "✅ Flutter $(flutter --version | head -1) instalado"
 fi
 
-# ── 2. Cargar variables de entorno ──────────────────────────────────────────
-# En local: cargar .env si existe
+# ── 2. Cargar variables ──────────────────────────────────────────────────
 if [ -f .env ]; then
-  set -a
-  source .env
-  set +a
+  set -a && source .env && set +a
 fi
 
-# Validar que las variables obligatorias estén definidas
 if [ -z "${SUPABASE_URL:-}" ] || [ -z "${SUPABASE_ANON_KEY:-}" ]; then
   echo "❌ Error: SUPABASE_URL y SUPABASE_ANON_KEY deben estar definidas."
-  echo "   En local: asegúrate de que .env exista con ambas variables."
-  echo "   En Vercel: configúralas en Settings → Environment Variables."
   exit 1
 fi
 
-# ── 3. Compilar ─────────────────────────────────────────────────────────────
+# ── 3. Compilar ───────────────────────────────────────────────────────────
 echo "🔧 Compilando SIGCAL para web..."
-echo "   SUPABASE_URL: $SUPABASE_URL"
+echo "   URL:  $SUPABASE_URL"
+echo "   KEY:  ${SUPABASE_ANON_KEY:0:20}..."
 echo ""
 
-# Escribir defines en archivo JSON para evitar problemas de escaping
-# con caracteres especiales en los tokens JWT (puntos, iguales)
-cat > /tmp/sigcal-defines.json << EOF
-{
-  "SUPABASE_URL": "$SUPABASE_URL",
-  "SUPABASE_ANON_KEY": "$SUPABASE_ANON_KEY"
-}
-EOF
+# Escribir defines como JSON (printf evita problemas de heredoc/escaping)
+printf '{"SUPABASE_URL":"%s","SUPABASE_ANON_KEY":"%s"}\n' \
+  "$SUPABASE_URL" \
+  "$SUPABASE_ANON_KEY" \
+  > /tmp/sigcal-defines.json
 
 flutter build web --dart-define-from-file=/tmp/sigcal-defines.json
 
