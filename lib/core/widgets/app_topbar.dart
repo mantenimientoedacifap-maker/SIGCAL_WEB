@@ -805,8 +805,8 @@ class _ThemeCycleButton extends ConsumerWidget {
   AppVisualMode _nextMode(AppVisualMode current) {
     return switch (current) {
       AppVisualMode.light => AppVisualMode.dark,
-      AppVisualMode.dark => AppVisualMode.classic,
-      AppVisualMode.classic => AppVisualMode.light,
+      AppVisualMode.dark => AppVisualMode.system,
+      AppVisualMode.system => AppVisualMode.light,
     };
   }
 }

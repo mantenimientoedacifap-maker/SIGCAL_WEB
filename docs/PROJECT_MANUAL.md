@@ -1,8 +1,8 @@
 # SIGCAL - Manual Técnico y Funcional
 
-**Última actualización:** 16/05/2026
-**Versión reflejada:** Fase 10 completada (Fase 8 pendiente)
-**Último cambio:** Creación de usuarios desde UI con Edge Function desplegada
+**Última actualización:** 17/05/2026
+**Versión reflejada:** Fase 11 completada — login premium + creación usuarios + deploy
+**Último cambio:** Rediseño login premium (glass, glow, responsive, Cinzel+Raleway)
 
 ---
 
@@ -31,6 +31,7 @@ La versión actual incluye: login protegido con Supabase Auth, inventario conect
 - **Apertura de archivos/links:** url_launcher
 - **PDF:** pdf, printing
 - **QR:** qr_flutter
+- **Fuentes:** google_fonts (Cinzel, Raleway)
 - **Preferencias:** shared_preferences
 - **Localización:** flutter_localizations
 
@@ -642,6 +643,7 @@ El output se genera en `build/web/`.
 | 16/05/2026 | Subida de manual técnico e informes técnicos | `lib/features/tools/data/tool_catalog_providers.dart`, `lib/features/tools/presentation/tool_detail_page.dart` | Botones TODO sin funcionalidad en ficha técnica | Manual técnico: picker PDF → `support-documents`. Informes: diálogo con tipo/título → `tool_documents`. Ambos con feedback visual |
 | 16/05/2026 | Carga de guía de remisión en formulario de envío | `lib/features/shipments/data/shipment_providers.dart`, `lib/features/shipments/presentation/shipment_form_page.dart` | El formulario solo aceptaba número de guía sin archivo adjunto | Picker de PDF/JPG/PNG, subida al bucket `remission-guides`, guardado en `remission_guide_file_url` |
 | 16/05/2026 | Creación de usuarios desde UI con Edge Function | `lib/features/users/`, `supabase/functions/create-user/` | Solo se podían crear usuarios desde Supabase Dashboard | Formulario en UI → Edge Function `create-user` (service_role del lado servidor) → Auth + perfil |
+| 17/05/2026 | Rediseño premium login: blanco/negro, logo dorado, glass effect, glow animado, responsive móvil, favicon circular "S" | `lib/features/auth/presentation/login_page.dart`, `lib/core/constants/app_colors.dart`, `lib/core/theme/app_theme.dart`, `lib/core/preferences/app_preferences.dart`, `lib/core/widgets/app_sidebar.dart`, `lib/app.dart`, `assets/`, `web/` | Paleta azul obsoleta, login poco profesional, sin logo, Clásico redundante | Login: fondo negro, logo dorado recortado, Cinzel+Raleway, glass+glow animado, responsive. Sidebar: logo dorado+dot. Favicon "S" circular. Clásico→Sistema. `google_fonts` añadido. |
 
 ---
 

@@ -7,64 +7,40 @@ class AppTheme {
 
   static ThemeData get light {
     return _build(
-      seed: AppColors.actionBlue,
-      primary: AppColors.actionBlue,
-      surface: AppColors.white,
-      background: AppColors.background,
-      text: AppColors.institutionalBlue,
-      muted: AppColors.muted,
       brightness: Brightness.light,
     );
   }
 
   static ThemeData get dark {
     return _build(
-      seed: const Color(0xFF38BDF8),
-      primary: const Color(0xFF38BDF8),
-      surface: const Color(0xFF111827),
-      background: const Color(0xFF020617),
-      text: const Color(0xFFE5E7EB),
-      muted: const Color(0xFF94A3B8),
       brightness: Brightness.dark,
     );
   }
 
-  static ThemeData get classic {
-    return _build(
-      seed: const Color(0xFFB45309),
-      primary: const Color(0xFFB45309),
-      surface: const Color(0xFFFFFBEB),
-      background: const Color(0xFFF7F0DD),
-      text: const Color(0xFF1F2937),
-      muted: const Color(0xFF6B7280),
-      brightness: Brightness.light,
-    );
-  }
-
   static ThemeData _build({
-    required Color seed,
-    required Color primary,
-    required Color surface,
-    required Color background,
-    required Color text,
-    required Color muted,
     required Brightness brightness,
   }) {
+    final isDark = brightness == Brightness.dark;
+    final surface = isDark ? AppColors.surfaceDark : AppColors.surfaceLight;
+    final background = isDark ? AppColors.black : AppColors.gray50;
+    final text = isDark ? AppColors.white : AppColors.black;
+    final mutedColor = isDark ? AppColors.gray400 : AppColors.gray500;
+    final outline = isDark ? AppColors.gray700 : AppColors.gray200;
+    final primary = isDark ? AppColors.white : AppColors.black;
+    final softSurface = isDark ? AppColors.gray800 : AppColors.gray50;
+
     final colorScheme = ColorScheme.fromSeed(
-      seedColor: seed,
+      seedColor: primary,
       primary: primary,
-      secondary: AppColors.calibration,
+      secondary: AppColors.gold,
       surface: surface,
       error: AppColors.danger,
       brightness: brightness,
+      onPrimary: isDark ? AppColors.black : AppColors.white,
+      onSurface: text,
+      onError: AppColors.white,
+      outline: outline,
     );
-    final isDark = brightness == Brightness.dark;
-    final softSurface = isDark
-        ? const Color(0xFF1E293B)
-        : AppColors.surfaceSoft;
-    final outline = isDark
-        ? const Color(0xFF334155)
-        : colorScheme.outlineVariant;
 
     return ThemeData(
       useMaterial3: true,
@@ -82,7 +58,7 @@ class AppTheme {
         color: surface,
         surfaceTintColor: surface,
         elevation: 0,
-        shadowColor: const Color(0xFF0F172A).withValues(alpha: 0.08),
+        shadowColor: const Color(0xFF000000).withValues(alpha: 0.08),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
           side: BorderSide(color: outline),
@@ -96,7 +72,7 @@ class AppTheme {
           fontSize: 22,
           fontWeight: FontWeight.w800,
         ),
-        contentTextStyle: TextStyle(color: muted, height: 1.4),
+        contentTextStyle: TextStyle(color: mutedColor, height: 1.4),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
       ),
       popupMenuTheme: PopupMenuThemeData(
@@ -118,14 +94,14 @@ class AppTheme {
         ),
         filled: true,
         fillColor: isDark ? softSurface : surface,
-        labelStyle: TextStyle(color: muted),
-        helperStyle: TextStyle(color: muted),
-        hintStyle: TextStyle(color: muted),
+        labelStyle: TextStyle(color: mutedColor),
+        helperStyle: TextStyle(color: mutedColor),
+        hintStyle: TextStyle(color: mutedColor),
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
           backgroundColor: primary,
-          foregroundColor: AppColors.white,
+          foregroundColor: isDark ? AppColors.black : AppColors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
@@ -134,10 +110,8 @@ class AppTheme {
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          foregroundColor: primary,
-          side: BorderSide(
-            color: primary.withValues(alpha: isDark ? 0.42 : 0.28),
-          ),
+          foregroundColor: text,
+          side: BorderSide(color: outline),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
@@ -146,20 +120,18 @@ class AppTheme {
       ),
       dataTableTheme: DataTableThemeData(
         headingRowColor: WidgetStatePropertyAll(
-          primary.withValues(
-            alpha: brightness == Brightness.dark ? 0.18 : 0.08,
-          ),
+          isDark ? AppColors.gray800 : AppColors.gray100,
         ),
         headingTextStyle: TextStyle(color: text, fontWeight: FontWeight.w700),
         dataTextStyle: TextStyle(color: text),
       ),
-      textTheme: ThemeData(
-        brightness: brightness,
-      ).textTheme.apply(bodyColor: text, displayColor: text),
-      iconTheme: IconThemeData(color: muted),
+      textTheme: ThemeData(brightness: brightness)
+          .textTheme
+          .apply(bodyColor: text, displayColor: text),
+      iconTheme: IconThemeData(color: mutedColor),
       listTileTheme: ListTileThemeData(
         textColor: text,
-        iconColor: muted,
+        iconColor: mutedColor,
         selectedColor: text,
       ),
     );

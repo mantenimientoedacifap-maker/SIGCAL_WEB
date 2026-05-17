@@ -13,18 +13,18 @@ class SigecalApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final preferences = ref.watch(appPreferencesProvider);
-    final theme = preferences.visualMode == AppVisualMode.classic
-        ? AppTheme.classic
-        : AppTheme.light;
+    final themeMode = switch (preferences.visualMode) {
+      AppVisualMode.dark => ThemeMode.dark,
+      AppVisualMode.system => ThemeMode.system,
+      AppVisualMode.light => ThemeMode.light,
+    };
 
     return MaterialApp.router(
       title: AppStrings.appName,
       debugShowCheckedModeBanner: false,
-      theme: theme,
+      theme: AppTheme.light,
       darkTheme: AppTheme.dark,
-      themeMode: preferences.visualMode == AppVisualMode.dark
-          ? ThemeMode.dark
-          : ThemeMode.light,
+      themeMode: themeMode,
       locale: preferences.language.locale,
       supportedLocales: [
         for (final language in AppLanguage.values) language.locale,
