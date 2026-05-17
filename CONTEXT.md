@@ -81,9 +81,14 @@ supabase functions deploy create-user --project-ref ichjvyttxlzjbzbjihdn
 
 ---
 
-## 📊 Estado actual (16/05/2026)
+## 📊 Estado actual (17/05/2026)
 
 - **v1.0**: 10 módulos completos, desplegado en Vercel
-- **v1.1**: En desarrollo. Último cambio: Edge Function create-user v2 (JWT + validación Lider)
+- **v1.1**: En desarrollo (rama `sigcalweb-v1.1`). 
+  - ✅ Login premium (blanco/negro, logo dorado, glass, glow, responsive, favicon "S")
+  - ✅ Sidebar con logo dorado + dot activo
+  - ✅ Modo Clásico → Sistema
+  - ✅ Paleta blanco/negro/gris, fuentes Cinzel + Raleway
+  - ⬜ Correcciones #2-6 pendientes (menú, header, títulos, sidebar duplicado)
 - **Usuario Lider**: franciscobances@sigcal.com
 - **URL producción**: sigcal-*.vercel.app (consultar Vercel)

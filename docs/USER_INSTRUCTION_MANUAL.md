@@ -23,6 +23,7 @@ Este documento describe el uso operativo de SIGCAL para usuarios finales, operad
 | 1.2 | 30/04/2026 | Documentación de login y roles iniciales | Acceso y seguridad | Codex |
 | 1.3 | 02/05/2026 | Documentación de calibraciones funcionales | Calibraciones | Codex |
 | 2.0 | 16/05/2026 | Actualización completa: dashboard real, inventario, ficha técnica, envíos kanban, préstamos, reportes, estadísticas, QR, PDF, perfil de usuario, administración de usuarios | Todos los módulos | Codex |
+| 2.1 | 17/05/2026 | Rediseño premium: login blanco/negro con logo dorado, efecto glass, glow animado. Modo Clásico reemplazado por Sistema. Sidebar con logo dorado y dot activo. Favicon "S" circular. | Login, Tema visual, Sidebar | Codex |
 
 ---
 
@@ -92,6 +93,8 @@ Todo usuario nuevo recibe inicialmente el rol **Usuario**. Un Lider debe ajustar
 
 ## 7. Acceso al sistema
 
+La pantalla de login tiene un diseño premium en blanco y negro con el logo dorado de SIGCAL, un sutil efecto de resplandor animado y acabado glass. Se adapta automáticamente a escritorio y dispositivos móviles.
+
 ### Cómo ingresar
 
 1. Abrir la web de SIGCAL en el navegador.
@@ -136,7 +139,7 @@ En la parte inferior del sidebar se muestra:
 ### Topbar (superior)
 Barra superior con:
 - Título de la sección actual.
-- Botones de tema visual (clásico, claro, oscuro).
+- Botones de tema visual (claro, oscuro, sistema).
 - Selector de idioma (español, inglés).
 - Campana de notificaciones.
 - Menú de usuario (perfil, cerrar sesión).
@@ -618,7 +621,7 @@ Haga clic en **Guardar perfil** para aplicar los cambios.
 
 Estas opciones se cambian desde el **topbar** (parte superior derecha), no desde Configuración:
 
-- **Tema**: clic en el ícono de paleta para alternar entre modo Clásico, Claro y Oscuro.
+- **Tema**: clic en el ícono de paleta para alternar entre modo Claro, Oscuro y Sistema (se adapta automáticamente a la configuración de su equipo).
 - **Idioma**: clic en el selector de idioma para alternar entre Español e Inglés.
 
 Ambas preferencias se guardan automáticamente y persisten al cerrar sesión.
