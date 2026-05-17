@@ -5,10 +5,27 @@
 # En Vercel, las variables SUPABASE_URL y SUPABASE_ANON_KEY se inyectan
 # automáticamente desde el dashboard (Settings → Environment Variables).
 # En local, se leen desde el archivo .env (gitignored, nunca se sube).
+#
+# Si Flutter no está instalado (entorno Vercel), se descarga automáticamente.
 # ═══════════════════════════════════════════════════════════════════════════════
 
 set -euo pipefail
 
+# ── 1. Asegurar que Flutter esté disponible ─────────────────────────────────
+if ! command -v flutter &>/dev/null; then
+  FLUTTER_DIR="/tmp/flutter-sdk"
+  if [ ! -d "$FLUTTER_DIR" ]; then
+    echo "📦 Descargando Flutter SDK (esto puede tomar ~2 min en Vercel)..."
+    git clone --depth 1 --branch stable \
+      https://github.com/flutter/flutter.git "$FLUTTER_DIR" 2>&1 | tail -1
+  fi
+  export PATH="$FLUTTER_DIR/bin:$PATH"
+  flutter config --no-analytics 2>/dev/null || true
+  flutter precache --web 2>&1 | tail -1
+  echo "✅ Flutter $(flutter --version | head -1) instalado"
+fi
+
+# ── 2. Cargar variables de entorno ──────────────────────────────────────────
 # En local: cargar .env si existe
 if [ -f .env ]; then
   set -a
@@ -24,6 +41,7 @@ if [ -z "${SUPABASE_URL:-}" ] || [ -z "${SUPABASE_ANON_KEY:-}" ]; then
   exit 1
 fi
 
+# ── 3. Compilar ─────────────────────────────────────────────────────────────
 echo "🔧 Compilando SIGCAL para web..."
 echo "   SUPABASE_URL: $SUPABASE_URL"
 echo ""
