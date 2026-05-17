@@ -8,9 +8,7 @@
 // Salida:           { success: true, userId } | { error: "..." }
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { corsHeaders } from "https://esm.sh/@supabase/supabase-js@2/dist/module/lib/helper";
 
-// Recreamos corsHeaders manualmente para no depender de imports internos
 const _corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
