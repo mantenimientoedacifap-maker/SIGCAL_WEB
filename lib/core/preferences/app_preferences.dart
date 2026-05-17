@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 enum AppVisualMode {
   light('light', 'Claro', Icons.light_mode_outlined),
   dark('dark', 'Oscuro', Icons.dark_mode_outlined),
-  classic('classic', 'Clasico', Icons.workspace_premium_outlined);
+  system('system', 'Sistema', Icons.brightness_auto_outlined);
 
   const AppVisualMode(this.value, this.label, this.icon);
 

@@ -67,14 +67,37 @@ class _BrandBlock extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(children: [
-      Container(width: 48, height: 48, decoration: BoxDecoration(color: AppColors.actionBlue, borderRadius: BorderRadius.circular(16)), alignment: Alignment.center,
-        child: const Icon(Icons.precision_manufacturing_outlined, color: AppColors.white)),
+      Container(
+        width: 48,
+        height: 48,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Image.asset('assets/logo.png', fit: BoxFit.cover),
+      ),
       const SizedBox(width: 14),
-      Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const Text(AppStrings.appName, style: TextStyle(color: AppColors.white, fontWeight: FontWeight.w800, fontSize: 20, letterSpacing: 0.5)),
-        const SizedBox(height: 2),
-        Text(context.t('app.tagline'), style: const TextStyle(color: Color(0xFFCBD5E1), fontSize: 12)),
-      ])),
+      Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              AppStrings.appName,
+              style: TextStyle(
+                color: AppColors.gold,
+                fontWeight: FontWeight.w800,
+                fontSize: 20,
+                letterSpacing: 0.5,
+              ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              context.t('app.tagline'),
+              style: const TextStyle(color: Color(0xFFA3A3A3), fontSize: 12),
+            ),
+          ],
+        ),
+      ),
     ]);
   }
 }
@@ -87,17 +110,34 @@ class _SidebarTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      selected: selected,
-      onTap: onTap,
-      leading: Icon(item.icon),
-      title: Text(context.t(item.key)),
-      iconColor: selected ? AppColors.white : const Color(0xFFCBD5E1),
-      textColor: selected ? AppColors.white : const Color(0xFFCBD5E1),
-      selectedTileColor: AppColors.sidebarSelected,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-      dense: true,
-      visualDensity: VisualDensity.compact,
+    return Stack(
+      children: [
+        ListTile(
+          selected: selected,
+          onTap: onTap,
+          leading: Icon(item.icon),
+          title: Text(context.t(item.key)),
+          iconColor: selected ? AppColors.white : const Color(0xFFA3A3A3),
+          textColor: selected ? AppColors.white : const Color(0xFFA3A3A3),
+          selectedTileColor: AppColors.sidebarSelected,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          dense: true,
+          visualDensity: VisualDensity.compact,
+        ),
+        if (selected)
+          Positioned(
+            left: 0,
+            top: 12,
+            child: Container(
+              width: 3,
+              height: 24,
+              decoration: BoxDecoration(
+                color: AppColors.gold,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }
